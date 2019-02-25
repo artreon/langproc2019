@@ -20,5 +20,6 @@ public:
 
 	 void translate(std::ostream& out, TranslateContext &context) const override;
 
+	 void codegen(std::ostream& out, CompileContext &context) const override;
 
 };

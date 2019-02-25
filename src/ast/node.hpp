@@ -21,6 +21,12 @@ public:
 
 };
 
+class CompileContext{
+public:
+	~CompileContext(){}
+	//REGS AND STUFF??????
+};
+
 
 class ASTNode
 {
@@ -31,9 +37,5 @@ public:
 
 	virtual void translate(std::ostream& out, TranslateContext &context) const=0;
 
-
-	virtual void codegen() const
-	{
-		throw std::runtime_error("Can't generate!");
-	}
+	virtual void codegen(std::ostream& out, CompileContext &context) const=0;
 };

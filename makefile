@@ -20,7 +20,9 @@ src/simplelexer.yy.cpp: src/simplelexer.flex src/simpleparser.tab.hpp
 bin/c_compiler: src/simplelexer.yy.cpp src/simpleparser.tab.cpp src/simpleparser.tab.hpp
 
 		mkdir -p bin
-		g++ $(CPPFLAGS) src/ast/translate.cpp -o bin/c_compiler $^
+		g++ $(CPPFLAGS) src/ast/compile.cpp src/ast/translate.cpp -o bin/c_compiler $^
+
+
 
 clean:
 

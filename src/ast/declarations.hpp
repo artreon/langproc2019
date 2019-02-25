@@ -28,7 +28,10 @@ public:
 
 	Type t() const { return _type; }
 	ASTType* pointerTo() const { return _pointer; }
+
 	 void translate(std::ostream& out, TranslateContext &context) const override;
+	 void codegen(std::ostream& out, CompileContext &context) const override;
+
 
 private:
 	Type _type;
@@ -79,6 +82,8 @@ public:
 	ASTExpression* initializer() const { return _initializer; }
 
  void translate(std::ostream& out, TranslateContext &context) const override;
+ void codegen(std::ostream& out, CompileContext &context) const override;
+
 
 
 };
@@ -92,6 +97,8 @@ public:
 
 
 	 void translate(std::ostream& out, TranslateContext &context) const override;
+	 void codegen(std::ostream& out, CompileContext &context) const override;
+
 };
 
 
@@ -114,5 +121,7 @@ public:
 	ASTBlock* body() const { return _body; }
 
 	 void translate(std::ostream& out, TranslateContext &context) const override;
+	 void codegen(std::ostream& out, CompileContext &context) const override;
+
 
 };

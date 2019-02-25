@@ -155,23 +155,17 @@ type:
 				| type T_MULT				{ $$ = new ASTType(ASTType::Pointer, $1); }
 	%%
 
+
+
 	ASTProgram* program = nullptr;
 
 int main(int argc, char* argv[])
 {
 
 	if(argc != 5){
-      std::cout<< "incorrect argument amount";
+      std::cout<< "incorrect arguments";
       return -1;
   }
-
-	std::string s = argv[2];
-  if(s== "-o"){
-    std::cout<<"third argument needs to be '-o'";
-      return -1;
-  }
-
-
 
 	FILE *myfile = fopen(argv[2], "r");
 
@@ -180,14 +174,11 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
-	if(std::string(argv[1])!= "--translate"){
-		std::cout<<"only translate function is supported";
-		return -1;
-	}
+	if(std::string(argv[1])== "--translate"){
 
-	yyin = myfile;
+		yyin = myfile;
 
-	yyparse();
+		yyparse();
 
 
 		std::ofstream py_out;
@@ -206,28 +197,19 @@ int main(int argc, char* argv[])
     py_out<<"\tsys.exit(ret)"<<std::endl;
 
 		py_out.close();
-
-
-
-
-	return 0;}
-
-
-
-	/*int main() {
-
-	FILE *myfile = fopen("simplecode.txt", "r");
-
-	if (!myfile) {
-		std::cout << "cant open!" << std::endl;
+	}
+	if(std::string(argv[1])=="-S"){
+		std::cout<<"only translate function is supported";
 		return -1;
 	}
+	
 
-	yyin = myfile;
 
-yyparse();
 
-}*/
+	return 0;
+}
+
+
 
 
 void yyerror(const char *s)

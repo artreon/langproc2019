@@ -86,6 +86,8 @@ public:
 	ASTExpression* right() const { return _right; }
 
 	 void translate(std::ostream& out, TranslateContext &context) const override;
+	 void codegen(std::ostream& out, CompileContext &context) const override;
+
 
 private:
 	ASTExpression* _left;
@@ -107,8 +109,13 @@ public:
 	std::string name() const { return _name; }
 
 	 void translate(std::ostream& out, TranslateContext &context) const override;
+	 void codegen(std::ostream& out, CompileContext &context) const override;
+
 
 };
+
+
+
 
 class ASTConstant : public ASTExpression
 {
@@ -123,6 +130,8 @@ public:
 	std::string value() const { return _value; }
 
 	 void translate(std::ostream& out, TranslateContext &context) const override;
+	 void codegen(std::ostream& out, CompileContext &context) const override;
+
 
 
 };
@@ -149,6 +158,8 @@ public:
 	std::string name() const { return _name; }
 
 	void translate(std::ostream& out, TranslateContext &context) const override;
+	void codegen(std::ostream& out, CompileContext &context) const override;
+
 
 
 };

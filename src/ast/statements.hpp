@@ -29,6 +29,7 @@ public:
 
 
 	 void translate(std::ostream& out, TranslateContext &context) const override;
+	 void codegen(std::ostream& out, CompileContext &context) const override;
 
 
 };
@@ -48,6 +49,7 @@ public:
 	ASTExpression* expression() const { return _expr; }
 
 	 void translate(std::ostream& out, TranslateContext &context) const override;
+	 void codegen(std::ostream& out, CompileContext &context) const override;
 
 
 };
@@ -68,6 +70,7 @@ public:
 	ASTExpression* expression() const { return _expr; }
 
 	 void translate(std::ostream& out, TranslateContext &context) const override;
+	 void codegen(std::ostream& out, CompileContext &context) const override;
 
 
 };
@@ -92,6 +95,7 @@ public:
 	ASTNode* elseBranch() const { return _else; }
 
 	void translate(std::ostream& out, TranslateContext &context) const override;
+	void codegen(std::ostream& out, CompileContext &context) const override;
 
 
 };
@@ -114,4 +118,6 @@ public:
 	ASTExpression* condition() const {return _condition;}
 
 	void translate(std::ostream& out, TranslateContext &context) const override;
+	void codegen(std::ostream& out, CompileContext &context) const override;
+
 };
