@@ -55,9 +55,13 @@ void ASTArgumentDecl::codegen(std::ostream& out, CompileContext &context)const
 throw std::runtime_error("Can't generate!");
 }
 
-void ASTFunctionDecl::codegen(std::ostream& out, CompileContext &context)const
+void ASTFunctionDecl::codegen(std::ostream& out, CompileContext &context)const//TO IMPLEMENT HI.c (only 0 arguments)
 {
-throw std::runtime_error("Can't generate!");
+//throw std::runtime_error("Can't generate!");
+  out<<".globl "<<name()<<std::endl;
+  out<<".type "<<name()<<" @function"<<std::endl;
+  out<<name()<<":"<<std::endl;
+  body()->codegen(out, context);
 }
 
 
@@ -66,14 +70,23 @@ throw std::runtime_error("Can't generate!");
 
 //from statements.hpp
 
-void ASTBlock::codegen(std::ostream& out, CompileContext &context)const
+void ASTBlock::codegen(std::ostream& out, CompileContext &context)const//TO IMPLEMENT HI.c (potentially more)
 {
-throw std::runtime_error("Can't generate!");
+  std::vector<ASTNode*> stmts = statements();
+  for(size_t i = 0; i<stmts.size();i++){
+    stmts[i]->codegen(out, context);
+  }
+//throw std::runtime_error("Can't generate!");
 }
 
-void ASTReturnStatement::codegen(std::ostream& out, CompileContext &context)const
+void ASTReturnStatement::codegen(std::ostream& out, CompileContext &context)const//TO IMPLEMENT HI.C ONLY
 {
-throw std::runtime_error("Can't generate!");
+  out<<"addiu $sp, $sp, -4"<<std::endl;
+  out<<"addi $v0, $zero, 10"<<std::endl;
+  out<<"addiu $sp, $sp, 4"<<std::endl;
+  out<<"jr $ra"<<std::endl;
+
+//throw std::runtime_error("Can't generate!");
 }
 
 void ASTExpressionStatement::codegen(std::ostream& out, CompileContext &context)const
@@ -96,5 +109,10 @@ throw std::runtime_error("Can't generate!");
 
 void ASTProgram::codegen(std::ostream& out, CompileContext &context)const
 {
-throw std::runtime_error("Can't generate!");
+
+  std::vector<ASTDeclaration*> decls = declarations();
+  for(size_t i = 0; i<decls.size();i++){
+  decls[i]->codegen(out, context);
+  }
+//throw std::runtime_error("Can't generate!");
 }

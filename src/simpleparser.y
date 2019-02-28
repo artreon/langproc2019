@@ -199,10 +199,26 @@ int main(int argc, char* argv[])
 		py_out.close();
 	}
 	if(std::string(argv[1])=="-S"){
-		std::cout<<"only translate function is supported";
+
+		yyin = myfile;
+
+		yyparse();
+
+
+		std::ofstream mips_out;
+
+		mips_out.open(argv[4]);
+
+		size_t count = 0;
+		CompileContext cont(count);
+
+    program->codegen(mips_out, cont);
+
+		//std::cout<<"only translate function is supported"<<std::endl;
+
 		return -1;
 	}
-	
+
 
 
 
