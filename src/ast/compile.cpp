@@ -23,7 +23,7 @@ void ASTVariable::codegen(std::ostream& out, CompileContext &context)const
 
   auto search = context.variable_locations.find(name());
   if(search!=context.variable_locations.end()){
-      out<<"lw, $"<<context.reg_no<<", "<<search->second<<"($fp)"<<std::endl;
+      out<<"lw  $"<<context.reg_no<<", "<<search->second<<"($fp)"<<std::endl;
       context.reg_no++;
 
 
@@ -59,7 +59,7 @@ void ASTVariableDecl::codegen(std::ostream& out, CompileContext &context)const
 {
   if(type()->t() == ASTType::Int){
       if(initializer()){
-        out<<"addiu $2,$0 ";
+        out<<"addiu $2,$0, ";
         initializer()->codegen(out,context);
         out<<std::endl;
       }
@@ -67,7 +67,7 @@ void ASTVariableDecl::codegen(std::ostream& out, CompileContext &context)const
   }
   else{throw std::runtime_error("Can't generate!");}
 
-  out<<"sw,$2, "<<context.offset<<"($fp)      #variable ";
+  out<<"sw $2, "<<context.offset<<"($fp)      #variable ";
   out << name()<<std::endl;
 
   context.variable_locations.insert(std::make_pair(name(),context.offset));
@@ -97,7 +97,7 @@ void ASTFunctionDecl::codegen(std::ostream& out, CompileContext &context)const//
 	out<<".set	noreorder"<<std::endl;
 	out<<".set	nomacro"<<std::endl;
 	out<<"addiu	$sp,$sp,-"<<context.frame_val<<std::endl;
-	out<<"sw	$fp,"<<context.frame_val-4<<"($sp)"<<std::endl;
+	out<<"sw $fp,"<<context.frame_val-4<<"($sp)"<<std::endl;
 	out<<"move	$fp,$sp"<<std::endl;
 
     body()->codegen(out, context);
