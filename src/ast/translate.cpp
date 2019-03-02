@@ -140,7 +140,10 @@ void ASTVariableDecl::translate(std::ostream& out, TranslateContext &context) co
     context.printTabs(out);
 
     out << name();
-		context.globals.push_back(name());
+		if(context.isGlobal){
+			context.globals.push_back(name());
+		}
+
 
       if (initializer()) {
         out << " = ";
@@ -202,6 +205,11 @@ void ASTFunctionDecl::translate(std::ostream& out, TranslateContext &context) co
 
 
 //from statements.hpp
+bool ASTBlock::emptyBlock(ASTStatementList statements) const
+{
+	if (statements.empty()){return true;}
+	else{return false;}
+}
 
 void ASTBlock::translate(std::ostream& out, TranslateContext &context) const
 {
@@ -225,6 +233,7 @@ void ASTReturnStatement::translate(std::ostream& out, TranslateContext &context)
 
 void ASTExpressionStatement::translate(std::ostream& out, TranslateContext &context) const
 {
+	context.isGlobal = false;
   context.printTabs(out);
   expression()->translate(out, context);
   out << std::endl;
@@ -266,6 +275,7 @@ context.decTab();
 
 void ASTProgram::translate(std::ostream& out, TranslateContext &context) const
 {
+	context.isGlobal = true;
   std::vector<ASTDeclaration*> decls = declarations();
   for(size_t i = 0; i<decls.size();i++){
     decls[i]->translate(out, context);

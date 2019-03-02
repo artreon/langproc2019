@@ -31,4 +31,5 @@ clean:
 	rm src/*.tab.hpp
 	rm src/*.output
 	rm bin/*
-	rm tests/*
+	rm test_deliverable/results/*
+	rm c_translator_tests/results/*

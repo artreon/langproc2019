@@ -95,6 +95,11 @@ private:
 	Operator       _op;
 };
 
+
+
+
+
+
 class ASTVariable : public ASTExpression
 {
 private:

@@ -1,3 +1,9 @@
 Date,Effort,Milestones
 24/02/2019,3,define_milestones
 25/02/2019,4,improve_translator
+26/02/2019,2,improve_translator
+26/02/2019,2,implement_primary_functionality
+27/02/2019,4,implement_primary_functionality
+1/03/2019,3,implement_primary_functionality
+2/03/2019,3,implement_primary_functionality
+2/03/2019,2,start_test_bench

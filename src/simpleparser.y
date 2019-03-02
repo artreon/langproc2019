@@ -211,7 +211,7 @@ int main(int argc, char* argv[])
 
 		size_t count = 0;
 		CompileContext cont(count);
-
+		mips_out<<".file	1 "<<"\""<<argv[2]<<"\""<<std::endl;
     program->codegen(mips_out, cont);
 
 		//std::cout<<"only translate function is supported"<<std::endl;

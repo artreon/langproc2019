@@ -20,15 +20,9 @@ public:
 		: _statements(statements){}
 
 	ASTStatementList statements() const { return _statements; }
-	bool emptyBlock(ASTStatementList statements) const
-	{
-		if (statements.empty()){return true;}
-		else{return false;}
-	};
+	bool emptyBlock(ASTStatementList statements) const;
 
-
-
-	 void translate(std::ostream& out, TranslateContext &context) const override;
+	void translate(std::ostream& out, TranslateContext &context) const override;
 	 void codegen(std::ostream& out, CompileContext &context) const override;
 
 
