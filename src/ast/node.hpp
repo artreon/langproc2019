@@ -32,10 +32,26 @@ public:
 	std::vector<std::string> globals;
 	bool          isGlobal;
 	bool					callerFunc;
-	int						reg_no;
+	std::string				variable_used;
 	int 					frame_val;//IDG HOW THIS WORKS TBF
 	int						offset;
-	std::map<std::string, int> variable_locations;
+	std::map<std::string, int> variable_locations;//in mem
+	int used_regs[2][22]= {
+		{4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25},
+		{0,0,0,0,0,0,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 }
+	};
+											 					/*reg no, in use?
+																reg no: 0-always 0
+																reg no: 2,3 - return values
+																reg no: 4-7 - arguments
+																reg no: 8-15 - temps (callers job to save if needed)
+																reg no: 16-23 - callee needs to save
+																reg_no: 24,25 - temps
+																rest are the pointers */
+	int get_temp_reg(int used_reg[2][22]);
+	void free_temp_regs(int used_reg[2][22]);
+	void use_temp_reg(int used_reg[2][22]);
+
 
 };
 

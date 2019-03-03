@@ -84,7 +84,7 @@ public:
 	Operator op() const { return _op; }
 	ASTExpression* left() const { return _left; }
 	ASTExpression* right() const { return _right; }
-
+	
 	 void translate(std::ostream& out, TranslateContext &context) const override;
 	 void codegen(std::ostream& out, CompileContext &context) const override;
 
@@ -112,6 +112,7 @@ public:
 		: ASTExpression(ASTExpression::Variable), _name(name){}
 
 	std::string name() const { return _name; }
+
 
 	 void translate(std::ostream& out, TranslateContext &context) const override;
 	 void codegen(std::ostream& out, CompileContext &context) const override;
