@@ -21,20 +21,17 @@ main:
 addiu	$sp,$sp,-32
 sw $fp,28($sp)
 move	$fp,$sp
-addu $2, $0, $0 
-addiu $2,$0, 5
-sw $2, 0($fp)      #variable b
-addu $2, $0, $0 
-addiu $2,$0, 5
-sw $2, 4($fp)      #variable c
-lw  $2, 0($fp)       #variable b in reg2
-lw  $3, 4($fp)       #variable c in reg3
-addu $24, $2, $3
-lw  $4, 0($fp)       #variable b in reg4
-addiu $26, $4, 3
-lw  $5, 4($fp)       #variable c in reg5
-addiu $27, $5, 6
-addiu $2,$0,0
+addiu $8,$0, 0
+sw $8, 0($fp)      #variable a
+lw  $8, 0($fp)      #variable a in reg 8
+addiu $9,$0, 0
+bne $8, $9, L0
+lw  $10, 0($fp)      #variable a in reg 10
+addiu $10,$0, 1
+sw  $10, 0($fp)     #variable a
+L0:
+lw  $11, 0($fp)      #variable a in reg 11
+move $2, $11
 move	$sp,$fp
 lw	$fp,28($sp)
 addiu	$sp,$sp,32

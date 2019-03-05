@@ -32,7 +32,8 @@ public:
 	std::vector<std::string> globals;
 	bool          isGlobal;
 	bool					callerFunc;
-	std::string				variable_used;
+	std::string		variable_used;
+	int						branch_to;
 	int 					frame_val;//IDG HOW THIS WORKS TBF
 	int						offset;
 	std::map<std::string, int> variable_locations;//in mem
