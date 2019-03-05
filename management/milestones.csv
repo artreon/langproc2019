@@ -1,5 +1,5 @@
 MilestoneID,EstimatedEffort,Completed,Description
-define_milestones,5,,Review previous work, new spec, and plan approach to project
+define_milestones,5,,Review previous work new spec and plan approach to project
 improve_translator,5,,Iron out the problems from the previous translator
 begin_codegen,0,,Revisit ast and start to implement compile function
 implement_primary_functionality,10,,Support the basic codegen features-variables of type int, function decls
