@@ -1,5 +1,7 @@
 WeekBeginning,	PlannedEffort,	ActualEffort, Milestones
 18/02/19, 5, 3, define_milestones
-25/02/19,26,17, improve_translator begin_codegen start_test_bench implement_primary_functionality implement_secondary_functionality
-4/03/19,27,,implement_secondary_functionality begin_test_deliverable implement_statements_codegen complete_test_deliverable review_project
-11/03/19,,,
+25/02/19, 26, 17, improve_translator begin_codegen start_test_bench implement_primary_functionality implement_secondary_functionality
+4/03/19, 27,20,implement_secondary_functionality begin_test_deliverable implement_statements_codegen complete_test_deliverable review_project
+11/03/19,5,0,review_project
+18/03/19,20,4,research_codegen
+25/03/19,10,15,complete_secondary_codegen research_codegen

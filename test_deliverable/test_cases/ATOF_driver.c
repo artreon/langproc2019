@@ -1,7 +1,7 @@
 #include <stdlib.h>
 
-int _ATOF()
+int _ATOF();
 
 int main(){
-	return !( (f("42")==42) && (f("-5")==-5));
+	return !( (_ATOF("42")==42) && (_ATOF("-5")==-5));
 }

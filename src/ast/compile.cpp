@@ -25,7 +25,7 @@ int CompileContext::get_temp_reg(int used_reg[2][22]){
   for(int i=4;i<11;i++){
     if(used_reg[1][i]==0){return i+4;}
   }
-  throw std::runtime_error("Can't generate!");
+  throw std::runtime_error("cant get a temp reg!");
   return -1;
 }
 void CompileContext::free_temp_regs(int used_reg[2][22]){
@@ -61,7 +61,14 @@ void ASTConstant::codegen(std::ostream& out, CompileContext &context)const
 
 void ASTFunctionCall::codegen(std::ostream& out, CompileContext &context)const
 {
-throw std::runtime_error("Can't generate!");
+  context.callerFunc=true;
+  out<<".option	pic0"<<std::endl;
+  out<<"jal "<<name()<<std::endl;
+  out<<"nop "<<std::endl;
+  out<<std::endl;
+  out<<".option	pic2"<<std::endl;
+
+//throw std::runtime_error("Can't generate function call!");
 }
 
 void ASTBinaryExpression::codegen(std::ostream& out, CompileContext &context)const
@@ -85,7 +92,7 @@ void ASTBinaryExpression::codegen(std::ostream& out, CompileContext &context)con
       switch(left()->type()){
         case ASTExpression::Constant:
         {
-          out<<"addiu $"<<context.get_temp_reg(context.used_regs)-1<<",$0, ";
+          out<<"addiu $"<<context.get_temp_reg(context.used_regs)<<",$0, ";
           left()->codegen(out, context);
           out<<std::endl;
           context.use_temp_reg(context.used_regs);
@@ -99,7 +106,80 @@ void ASTBinaryExpression::codegen(std::ostream& out, CompileContext &context)con
         break;
         case ASTExpression::FunctionCall:
         {
-          throw std::runtime_error("Can't generate!1");
+          //throw std::runtime_error("Can't generate!1");
+          left()->codegen(out, context);
+          out<<"addu $"<<context.get_temp_reg(context.used_regs)<<",$0,$2     #function call return val"<<std::endl;
+          context.use_temp_reg(context.used_regs);
+        }
+        break;
+        case ASTExpression::BinaryExpression:
+        {
+          left()->codegen(out, context);
+        }
+        break;
+      }
+
+      switch(right()->type()){
+        case ASTExpression::Constant:
+        {
+          out<<"addiu $"<<context.get_temp_reg(context.used_regs)-1<<",$"<<context.get_temp_reg(context.used_regs)-1<<", ";
+          right()->codegen(out, context);
+          out<<std::endl;
+        }
+        break;
+        case ASTExpression::Variable:
+        {
+          right()->codegen(out, context);
+
+          out<<"addu $"<<context.get_temp_reg(context.used_regs)-2<<", $"<<context.get_temp_reg(context.used_regs)-2<<", $"<<context.get_temp_reg(context.used_regs)-1<<std::endl;
+
+        }
+        break;
+        case ASTExpression::FunctionCall:
+        {
+          //throw std::runtime_error("Can't generate!5");
+          left()->codegen(out, context);
+          out<<"addu $"<<context.get_temp_reg(context.used_regs)<<",$0,$2     #function call return val"<<std::endl;
+          out<<"addu $"<<context.get_temp_reg(context.used_regs)-2<<", $"<<context.get_temp_reg(context.used_regs)-2<<", $"<<context.get_temp_reg(context.used_regs)-1<<std::endl;
+        }
+        break;
+        case ASTExpression::BinaryExpression:
+        {
+          right()->codegen(out, context);
+        }
+        break;
+      }
+      break;
+
+
+
+
+    }
+    break;
+    case ASTBinaryExpression::OpSub:
+    {
+
+      switch(left()->type()){
+        case ASTExpression::Constant:
+        {
+          out<<"addiu $"<<context.get_temp_reg(context.used_regs)<<",$0, ";
+          left()->codegen(out, context);
+          out<<std::endl;
+          context.use_temp_reg(context.used_regs);
+        }
+        break;
+        case ASTExpression::Variable:
+        {
+          left()->codegen(out, context);
+
+        }
+        break;
+        case ASTExpression::FunctionCall:
+        {
+          //throw std::runtime_error("Can't generate!1");
+          left()->codegen(out, context);
+          out<<"addu $"<<context.get_temp_reg(context.used_regs)<<",$0,$2     #function call return val"<<std::endl;
+          context.use_temp_reg(context.used_regs);
         }
         break;
         case ASTExpression::BinaryExpression:
@@ -127,7 +207,10 @@ void ASTBinaryExpression::codegen(std::ostream& out, CompileContext &context)con
         break;
         case ASTExpression::FunctionCall:
         {
-          throw std::runtime_error("Can't generate!5");
+          //throw std::runtime_error("Can't generate!5");
+          left()->codegen(out, context);
+          out<<"addu $"<<context.get_temp_reg(context.used_regs)<<",$0,$2     #function call return val"<<std::endl;
+          out<<"sub $"<<context.get_temp_reg(context.used_regs)-2<<", $"<<context.get_temp_reg(context.used_regs)-2<<", $"<<context.get_temp_reg(context.used_regs)-1<<std::endl;
         }
         break;
         case ASTExpression::BinaryExpression:
@@ -140,67 +223,6 @@ void ASTBinaryExpression::codegen(std::ostream& out, CompileContext &context)con
 
 
 
-
-    }
-    break;
-    case ASTBinaryExpression::OpSub:
-    {
-
-      switch(left()->type()){
-        case ASTExpression::Constant:
-        {
-          out<<"addiu $"<<context.get_temp_reg(context.used_regs)-1<<",$0, ";
-          left()->codegen(out, context);
-          out<<std::endl;
-          context.use_temp_reg(context.used_regs);
-        }
-        break;
-        case ASTExpression::Variable:
-        {
-          left()->codegen(out, context);
-
-        }
-        break;
-        case ASTExpression::FunctionCall:
-        {
-          throw std::runtime_error("Can't generate!4");
-        }
-        break;
-        case ASTExpression::BinaryExpression:
-        {
-          left()->codegen(out, context);
-        }
-        break;
-      }
-
-        switch(right()->type()){
-          case ASTExpression::Constant:
-          {
-            out<<"addiu $"<<context.get_temp_reg(context.used_regs)-1<<",$"<<context.get_temp_reg(context.used_regs)-1<<", -";
-            right()->codegen(out, context);
-            out<<std::endl;
-          }
-          break;
-          case ASTExpression::Variable:
-          {
-            right()->codegen(out, context);
-
-            out<<"sub $"<<context.get_temp_reg(context.used_regs)-2<<", $"<<context.get_temp_reg(context.used_regs)-2<<", $"<<context.get_temp_reg(context.used_regs)-1<<std::endl;
-
-          }
-          break;
-          case ASTExpression::FunctionCall:
-          {
-            throw std::runtime_error("Can't generate!5");
-          }
-          break;
-          case ASTExpression::BinaryExpression:
-          {
-            right()->codegen(out, context);
-          }
-          break;
-        }
-        break;
 
     }
     break;
@@ -242,7 +264,7 @@ void ASTBinaryExpression::codegen(std::ostream& out, CompileContext &context)con
             out<<std::endl;
             context.use_temp_reg(context.used_regs);
             out<<"multu $"<<context.get_temp_reg(context.used_regs)-2<<", $"<<context.get_temp_reg(context.used_regs)-1<<std::endl;
-             out<<"mflo $"<<context.get_temp_reg(context.used_regs)-2<<std::endl;
+             out<<"mflo $"<<context.get_temp_reg(context.used_regs)-1<<std::endl;
 
 
           }
@@ -251,7 +273,7 @@ void ASTBinaryExpression::codegen(std::ostream& out, CompileContext &context)con
           {
             right()->codegen(out, context);
             out<<"multu $"<<context.get_temp_reg(context.used_regs)-2<<", $"<<context.get_temp_reg(context.used_regs)-1<<std::endl;
-             out<<"mflo $"<<context.get_temp_reg(context.used_regs)-2<<std::endl;
+             out<<"mflo $"<<context.get_temp_reg(context.used_regs)-1<<std::endl;
 
 
 
@@ -312,7 +334,8 @@ void ASTBinaryExpression::codegen(std::ostream& out, CompileContext &context)con
             out<<std::endl;
             context.use_temp_reg(context.used_regs);
             out<<"divu $"<<context.get_temp_reg(context.used_regs)-2<<", $"<<context.get_temp_reg(context.used_regs)-1<<std::endl;
-            out<<"mflo $"<<context.get_temp_reg(context.used_regs)-2<<std::endl;
+             out<<"mflo $"<<context.get_temp_reg(context.used_regs)-1<<std::endl;
+
 
           }
           break;
@@ -320,7 +343,8 @@ void ASTBinaryExpression::codegen(std::ostream& out, CompileContext &context)con
           {
             right()->codegen(out, context);
             out<<"divu $"<<context.get_temp_reg(context.used_regs)-2<<", $"<<context.get_temp_reg(context.used_regs)-1<<std::endl;
-            out<<"mflo $"<<context.get_temp_reg(context.used_regs)-2<<std::endl;
+             out<<"mflo $"<<context.get_temp_reg(context.used_regs)-1<<std::endl;
+
 
 
           }
@@ -340,7 +364,6 @@ void ASTBinaryExpression::codegen(std::ostream& out, CompileContext &context)con
 
 
 
-
     }
 
 
@@ -352,6 +375,7 @@ void ASTBinaryExpression::codegen(std::ostream& out, CompileContext &context)con
     {
       if(left()->type()==ASTExpression::Variable){
         left()->codegen(out, context);
+        context.temp_reg_location=context.get_temp_reg(context.used_regs)-1;
 
       }
       else{
@@ -366,10 +390,11 @@ void ASTBinaryExpression::codegen(std::ostream& out, CompileContext &context)con
           out<<std::endl;
 
           auto search1 = context.variable_locations.find(context.variable_used);
-          if(search1!=context.variable_locations.end()){
-              out<<"sw  $"<<context.get_temp_reg(context.used_regs)-1<<", "<<search1->second<<"($fp)     #variable "<<context.variable_used<<std::endl;
+          if(search1!=context.variable_locations.end())
+          {
+            out<<"sw  $"<<context.temp_reg_location<<", "<<search1->second<<"($fp)     #variable "<<context.variable_used<<std::endl;
           }
-          else{throw std::runtime_error("Can't generate!69hehe");}
+
         }
         break;
         case ASTExpression::Variable:
@@ -379,22 +404,39 @@ void ASTBinaryExpression::codegen(std::ostream& out, CompileContext &context)con
         break;
         case ASTExpression::FunctionCall:
         {
-          throw std::runtime_error("Can't generate!8");
+          right()->codegen(out, context);
+          out<<"addu $"<<context.get_temp_reg(context.used_regs)<<",$0,$2     #function call return val"<<std::endl;
+
+          out<<"addu $"<<context.temp_reg_location<<", $"<<context.temp_reg_location<<", $"<<context.get_temp_reg(context.used_regs)<<std::endl;
+          auto search2 = context.variable_locations.find(context.variable_used);
+          if(search2!=context.variable_locations.end())
+          {
+            out<<"sw  $"<<context.temp_reg_location<<", "<<search2->second<<"($fp)     #variable "<<context.variable_used<<std::endl;
+          }
+
+          //throw std::runtime_error("Can't generate!8");
         }
         break;
         case ASTExpression::BinaryExpression:
         {
           right()->codegen(out, context);
-          auto search2 = context.variable_locations.find(context.variable_used);
-          if(search2!=context.variable_locations.end()){
-              out<<"sw  $"<<context.get_temp_reg(context.used_regs)-2<<", "<<search2->second<<"($fp)     #variable "<<context.variable_used<<std::endl;
-              context.free_temp_regs(context.used_regs);
+          out<<"addu $"<<context.temp_reg_location<<",$0,$"<<context.get_temp_reg(context.used_regs)-1<<std::endl;
+          auto search3 = context.variable_locations.find(context.variable_used);
+          if(search3!=context.variable_locations.end())
+          {
+            out<<"sw  $"<<context.temp_reg_location<<", "<<search3->second<<"($fp)     #variable "<<context.variable_used<<std::endl;
           }
-          else{throw std::runtime_error("slickest");}
 
         }
         break;
+
+
+
+
+
+
       }
+      context.free_temp_regs(context.used_regs);
       break;
     }
     break;
@@ -732,9 +774,7 @@ void ASTBinaryExpression::codegen(std::ostream& out, CompileContext &context)con
 
 			right()->codegen(out, context);
 
-
-		}
-
+    }
 
 
 
@@ -751,6 +791,24 @@ throw std::runtime_error("Can't generate!10");
 
 void ASTVariableDecl::codegen(std::ostream& out, CompileContext &context)const
 {
+  if(context.isGlobal==true){
+    out<<".globl	"<<name()<<std::endl;
+  	out<<".data"<<std::endl;
+  	out<<".align	2"<<std::endl;
+  	out<<".type	"<<name()<<", @object"<<std::endl;
+  out<<".size	"<<name()<<", 4"<<std::endl;
+  out<<name()<<":"<<std::endl;
+  out<<".word	";
+  initializer()->codegen(out, context);
+  out<<std::endl;
+  out<<".text"<<std::endl;
+  }
+  else{
+
+
+
+
+
   if(type()->t() == ASTType::Int){
 
       if(initializer()){
@@ -759,9 +817,10 @@ void ASTVariableDecl::codegen(std::ostream& out, CompileContext &context)const
         out<<std::endl;
         context.use_temp_reg(context.used_regs);
       }
+      else{context.use_temp_reg(context.used_regs);}
 
   }
-  else{throw std::runtime_error("Can't generate!11");}
+  else{throw std::runtime_error("Can't generate non int");}
 
   out<<"sw $"<<context.get_temp_reg(context.used_regs)-1<<", "<<context.offset<<"($fp)      #variable ";
   out << name()<<std::endl;
@@ -770,6 +829,7 @@ void ASTVariableDecl::codegen(std::ostream& out, CompileContext &context)const
   context.variable_locations.insert(std::make_pair(name(),context.offset));
   context.offset+=4;
 
+}
 }
 
 void ASTArgumentDecl::codegen(std::ostream& out, CompileContext &context)const
@@ -780,7 +840,8 @@ throw std::runtime_error("Can't generate!12");
 void ASTFunctionDecl::codegen(std::ostream& out, CompileContext &context)const//TO IMPLEMENT HI.c (only 0 arguments)
 {
 //throw std::runtime_error("Can't generate!13");
-  context.frame_val=32;
+context.isGlobal = false;
+  context.frame_val+= 32;
   out<<".align	2"<<std::endl;
   out<<".globl "<<name()<<std::endl;
   out<<".set	nomips16"<<std::endl;
@@ -789,12 +850,19 @@ void ASTFunctionDecl::codegen(std::ostream& out, CompileContext &context)const//
   out<<".type "<<name()<<", @function"<<std::endl;
   out<<name()<<":"<<std::endl;
   out<<".frame	$fp,"<<context.frame_val<<",$31		# vars= 0, regs= 1/0, args= 0, gp= 0"<<std::endl;
-	out<<".mask	0x40000000,-"<<context.frame_val-4<<std::endl;
+	out<<".mask	0x40000000,-4"<<std::endl;
 	out<<".fmask	0x00000000,0"<<std::endl;
 	out<<".set	noreorder"<<std::endl;
 	out<<".set	nomacro"<<std::endl;
 	out<<"addiu	$sp,$sp,-"<<context.frame_val<<std::endl;
-	out<<"sw $fp,"<<context.frame_val-4<<"($sp)"<<std::endl;
+  //int temp = context.frame_val;
+  //if(context.callerFunc==true){
+    //out<<"sw $31,"<<temp-4<<"($sp)"<<std::endl;
+	//out<<"sw $fp,"<<temp-8<<"($sp)"<<std::endl;}
+  //else{
+  out<<"sw $fp,"<<context.frame_val-4<<"($sp)"<<std::endl;
+  //}
+
 	out<<"move	$fp,$sp"<<std::endl;
 
     body()->codegen(out, context);
@@ -805,6 +873,7 @@ void ASTFunctionDecl::codegen(std::ostream& out, CompileContext &context)const//
 	out<<".set	reorder"<<std::endl;
 	out<<".end	"<<name()<<std::endl;
 	out<<".size	"<<name()<<", .-"<<name()<<std::endl;
+  context.isGlobal = true;
 }
 
 
@@ -841,7 +910,13 @@ void ASTReturnStatement::codegen(std::ostream& out, CompileContext &context)cons
 
 
   out<<"move	$sp,$fp"<<std::endl;
-  out<<"lw	$fp,"<<context.frame_val-4<<"($sp)"<<std::endl;
+  //int temp = context.frame_val;
+  //if(context.callerFunc==true){
+    //out<<"lw $31,"<<temp-4<<"($sp)"<<std::endl;
+	//out<<"sw $fp,"<<temp-8<<"($sp)"<<std::endl;}
+  //else{
+    out<<"lw	$fp,"<<context.frame_val-4<<"($sp)"<<std::endl;
+  //}
   out<<"addiu	$sp,$sp,"<<context.frame_val<<std::endl;
   out<<"j $31"<<std::endl;
   out<<"nop"<<std::endl;
@@ -878,7 +953,17 @@ if(elseBranch()){
 
 void ASTLoopingStatement::codegen(std::ostream& out, CompileContext &context)const
 {
-throw std::runtime_error("Can't generate!17");
+//throw std::runtime_error("Can't generate!17");
+out<<"L"<<context.branch_to<<":"<<std::endl;
+context.branch_to++;
+condition()->codegen(out, context);
+body()->codegen(out, context);
+out<<"j L"<<context.branch_to-1<<std::endl;
+out<<"L"<<context.branch_to<<":"<<std::endl;
+
+
+
+
 }
 
 
@@ -887,9 +972,10 @@ throw std::runtime_error("Can't generate!17");
 void ASTProgram::codegen(std::ostream& out, CompileContext &context)const
 {
   context.isGlobal = true;
-	context.callerFunc = true;
+	context.callerFunc = false;
   context.offset = 0;
   context.branch_to=0;
+  context.frame_val=0;
 
 
 

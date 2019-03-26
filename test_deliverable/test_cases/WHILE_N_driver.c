@@ -1,4 +1,4 @@
 int WHILE_N();
 int main(){
-  return !(WHILE_N()==4);
+  return !(WHILE_N()==5);
 }

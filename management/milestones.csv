@@ -9,4 +9,5 @@ begin_test_deliverable,5,,Think and plan test cases
 implement_statements_codegen,10,,If while loops
 complete_test_deliverable,5,,
 review_project,2,,
-complete_codegen,,,
+research_codegen,10,,Understand more complex codegen features by research/testing mips-linux-gnu-gcc etc
+complete_secondary_codegen,20,,Finish intermediate implementation of codegen
