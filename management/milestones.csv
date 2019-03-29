@@ -3,11 +3,11 @@ define_milestones,5,,Review previous work new spec and plan approach to project
 improve_translator,5,,Iron out the problems from the previous translator
 begin_codegen,0,,Revisit ast and start to implement compile function
 implement_primary_functionality,10,,Support the basic codegen features-variables of type int & function decls
-start_test_bench,2,,
+start_test_bench,2,,plan simple tests for the easier test cases
 implement_secondary_functionality,10,,Support more basic codegen features-arithmetic
-begin_test_deliverable,5,,Think and plan test cases
-implement_statements_codegen,10,,If while loops
-complete_test_deliverable,5,,
+begin_test_deliverable,2,,Think and plan test cases
+implement_statements_codegen,9,,If while loops
+complete_test_deliverable,5,,implement test cases and driver programs then write script to run the tests on the compiler
 review_project,2,,
 research_codegen,10,,Understand more complex codegen features by research/testing mips-linux-gnu-gcc etc
-complete_secondary_codegen,20,,Finish intermediate implementation of codegen
+complete_secondary_codegen,20,no,Finish intermediate implementation of codegen
